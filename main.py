@@ -4,9 +4,12 @@ from aiogram.filters import Command
 import logging
 import asyncio
 
-# Токен бота
-TOKEN = "7568958401:AAH0GfSvDG7Rcja5lEHj0yK38eOqTX0SI64"
-OWNER_ID = 6850746500  # Замени на свой Telegram ID
+# # Токен бота
+# TOKEN = "7568958401:AAH0GfSvDG7Rcja5lEHj0yK38eOqTX0SI64"
+# OWNER_ID = 6850746500  # Замени на свой Telegram ID
+import os
+TOKEN = os.getenv("TOKEN")
+OWNER_ID = os.getenv("OWNER_ID")
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
