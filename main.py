@@ -101,18 +101,30 @@ async def handle_location(message: types.Message):
 dp.message.register(handle_location, lambda m: m.content_type == types.ContentType.LOCATION)
 
 async def handle_contact(message: types.Message):
+  import logging
+
+async def handle_contact(message: types.Message):
     user_id = message.from_user.id
+    logging.info(f"Получен контакт от {user_id}: {message.contact}")
+
     if user_id not in user_data:
         user_data[user_id] = {}
+
     phone_number = message.contact.phone_number if message.contact else message.text
     user_data[user_id]["phone"] = phone_number
+    
     location = user_data[user_id].get("location", None)
     category = user_data[user_id].get("category", "Не указано")
+
     location_link = f"https://maps.google.com/?q={location.latitude},{location.longitude}" if location else "Локация не найдена"
+    
     text = f"📌 Новый заказ!\n👤 Имя: {message.from_user.full_name}\n📞 Телефон: {phone_number}\n🏢 Этаж: {category}\n🌍 Локация: {location_link}"
+    
+    logging.info(f"Отправка заказа владельцу: {text}")
+
     await bot.send_message(OWNER_ID, text)
     await message.answer("✅ Ваш заказ отправлен! Мы скоро с вами свяжемся!", reply_markup=repeat_order_keyboard[user_data[user_id]["lang"]])
-dp.message.register(handle_contact, lambda m: m.content_type in [types.ContentType.CONTACT, types.ContentType.TEXT])
+
 
 async def repeat_order(message: types.Message):
     user_id = message.from_user.id
